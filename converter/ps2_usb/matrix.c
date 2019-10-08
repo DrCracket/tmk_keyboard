@@ -69,6 +69,7 @@ static bool is_modified = false;
 
 void matrix_init(void)
 {
+    _delay_ms(1000);
     debug_enable = true;
     ps2_host_init();
 
