@@ -1,5 +1,6 @@
 #include "unimap_trans.h"
 #include "action_layer.h"
+#include "led.h"
 
 #define AC_FN0 ACTION_MACRO(0)
 
@@ -9,7 +10,7 @@ const action_t actionmaps[][UNIMAP_ROWS][UNIMAP_COLS] __attribute__ ((section ("
 const action_t actionmaps[][UNIMAP_ROWS][UNIMAP_COLS] PROGMEM = {
 #endif
     UNIMAP_AT_CUSTOM(
-    F1,  F2,     ESC, 1,   2,   3,   4,   5,   6,   7,   8,   9,   0,   MINS,EQL, BSLS,GRV,    FN0, PSCR,SLCK,PAUS, \
+    F1,  F2,     ESC, 1,   2,   3,   4,   5,   6,   7,   8,   9,   0,   MINS,EQL, BSLS,GRV,  NLCK, PSCR,SLCK,PAUS, \
     F3,  F4,     TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,   LBRC,RBRC,     BSPC,   P7,  P8,  P9,  F11,  \
     F5,  F6,     LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,          ENT,    P4,  P5,  P6,  NO,   \
     F7,  F8,     LSFT,NUBS,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT ,SLSH,          RSFT,   P1,  P2,  P3,  F12,  \
@@ -24,12 +25,11 @@ const action_t actionmaps[][UNIMAP_ROWS][UNIMAP_COLS] PROGMEM = {
     ),
 };
 
-
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt) {
-    if (record->event.pressed) {
-        layer_invert(1);
-        return MACRO( T(NLCK), END );
-    }
-
-    return MACRO( END );
+void hook_keyboard_leds_change(uint8_t led_status) {
+    // check if numlock is on
+    if (led_status & (1<<USB_LED_NUM_LOCK))
+        layer_on(1);
+    else
+        layer_off(1);
+    keyboard_set_leds(led_status);
 }
